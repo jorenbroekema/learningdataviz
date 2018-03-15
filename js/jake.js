@@ -24,22 +24,3 @@
     }
 
     //TWO REALLY COOL FUNCTIONS ^
-
-    // CODE FOR JAKE
-
-    /*var sliderMin = 0; var sliderMax = 100;
-    var GHsMin = 0; var GHsMax = 50000; var stepMin = 0; var stepMax = 10;
-    var currencyMin = 0; var currencyMax = 10000;
-
-
-    var steps = Math.round(slider_value.map(sliderMin, sliderMax, stepMin, stepMax));
-    var GHs = steps.map(stepMin, stepMax, GHsMin, GHsMax);
-    var currency = steps.map(stepMin, stepMax, currencyMin, currencyMax);
-    GHs = number_format(GHs);
-    currency = number_format(currency);
-    var currencyString = "<span class='currency'>$</span>";
-    currencyString += currency;
-    currencyString += "<span class=\\'interval mt-10\\' style=\\'margin-left:10px;\\'>/ contract</span>"
-
-    $(".amount-gh").html(GHs);
-    $(".contract-price").html(currencyString);*/
