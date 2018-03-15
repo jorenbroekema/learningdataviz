@@ -1,77 +1,77 @@
-function BST(value){
+function HashTable (size){
+    this.buckets = Array(size);
+    this.numBuckets = this.buckets.length;
+}
+
+function HashNode(key, value, next){
+    this.key = key;
     this.value = value;
-    this.left = null
-    this.right = null;
+    this.next = next || null;
 }
 
-BST.prototype.insert = function(value){
-    if(!this.value) this.value = value;
+HashTable.prototype.hash = function(key){
+    var total = 0;
+    for(var i = 0; i < key.length; i++){
+        total += key.charCodeAt(i);
+    }
+    var bucket = total % this.numBuckets;
+    return bucket;
+}
 
-    if (value > this.value){
-        if(!this.right) this.right = new BST(value);
-        else this.right.insert(value);
+HashTable.prototype.insert = function(key, value){
+    var index = this.hash(key);
+    var currentNode = this.buckets[index];
+
+    if(!currentNode){
+        this.buckets[index] = new HashNode(key, value);
+    }else if(currentNode.key === key){
+        currentNode.value = value;
     }else{
-        if(!this.left){
-            this.left = new BST(value);
-        }else{
-            this.left.insert(value);
+        while(currentNode.next){
+            if(currentNode.next.key === key){
+                currentNode.next.value = value;
+                return;
+            }
+            currentNode = currentNode.next;
+        }
+        currentNode.next = new HashNode(key, value);
+    }
+}
+
+HashTable.prototype.get = function(key){
+    var index = this.hash(key);
+    if(!this.buckets[index]) return null;
+    else{
+        var currentNode = this.buckets[index];
+        while(currentNode){
+            if(currentNode.key === key) return currentNode.value;
+            currentNode = currentNode.next;
+        }
+        return null;
+    }
+}
+
+HashTable.prototype.retrieveAll = function(){
+    var allNodes = [];
+    for(var i = 0; i < this.numBuckets; i++){
+        if(this.buckets[i]){
+            var currentNode = this.buckets[i];
+            while(currentNode){
+                allNodes.push(currentNode);
+                currentNode = currentNode.next;
+            }
         }
     }
+    return allNodes;
 }
 
-BST.prototype.contains = function(value){
-    if(this.value === value){
-        return true;
-    }else{
-        if(value > this.value){
-            if(!this.right) return false;
-            else return this.right.contains(value);
-        }else{
-            if(!this.left) return false;
-            else return this.left.contains(value);
-        }
-    }
-}
+var myHT = new HashTable(30);
 
-BST.prototype.depthFirstTraversal = function(iteratorFunc, order){
-    if(order === 'pre-order') iteratorFunc(this.value);
-    if(this.left) this.left.depthFirstTraversal(iteratorFunc, order);
-    if(order === 'in-order') iteratorFunc(this.value);
-    if(this.right) this.right.depthFirstTraversal(iteratorFunc, order);
-    if(order === 'post-order') iteratorFunc(this.value);
-}
+myHT.insert("Dean", "dean@gmail.com");
+myHT.insert("Megan", "megan@gmail.com");
+myHT.insert("Dane", "dane@yahoo.com");
+myHT.insert("Dean", "deanmachine@gmail.com"); //update
+myHT.insert("Megan", "megansmith@gmail.com"); //update
+myHT.insert("Dane", "dane1010@outlook.com"); //update
 
-BST.prototype.breadthFirstTraversal = function(iteratorFunc){
-    var queue = [this];
-    while(queue.length){
-        var treeNode = queue.shift();
-        iteratorFunc(treeNode.value);
-        if(treeNode.left) queue.push(treeNode.left);
-        if(treeNode.right) queue.push(treeNode.right);
-    }
-}
-
-BST.prototype.getMinVal = function(){
-    if(this.left) return this.left.getMinVal();
-    else return this.value;
-}
-
-BST.prototype.getMaxVal = function(){
-    if(this.right) return this.right.getMaxVal();
-    else return this.value;
-}
-
-var values = [50, 30, 20, 10, 45, 35, 70, 60, 100, 59, 85, 105];
-var bst = new BST();
-
-for(var i = 0; i < values.length; i++){
-    bst.insert(values[i]);
-}
-
-//bst.breadthFirstTraversal(log);
-console.log('MIN: ', bst.getMinVal());
-console.log('MAX: ', bst.getMaxVal());
-
-function log(value){
-    console.log(value);
-}
+console.log(myHT.retrieveAll());
